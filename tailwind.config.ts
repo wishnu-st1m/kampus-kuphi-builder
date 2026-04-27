@@ -13,7 +13,21 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['Fraunces', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
+        sunset: {
+          1: "hsl(var(--sunset-1))",
+          2: "hsl(var(--sunset-2))",
+          3: "hsl(var(--sunset-3))",
+        },
+        coffee: {
+          DEFAULT: "hsl(var(--coffee))",
+          dark: "hsl(var(--coffee-dark))",
+        },
+        paddy: "hsl(var(--paddy-green))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -1,16 +1,44 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Navbar } from "@/components/kuphi/Navbar";
+import { Hero } from "@/components/kuphi/Hero";
+import { About } from "@/components/kuphi/About";
+import { Menu } from "@/components/kuphi/Menu";
+import { Gallery } from "@/components/kuphi/Gallery";
+import { Reviews } from "@/components/kuphi/Reviews";
+import { Hours } from "@/components/kuphi/Hours";
+import { Visit } from "@/components/kuphi/Visit";
+import { Footer } from "@/components/kuphi/Footer";
+import { WhatsAppFab } from "@/components/kuphi/WhatsAppFab";
+import { useEffect } from "react";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  useEffect(() => {
+    document.title = "Kampus Kuphi — Warkop View Sawah & Sunset di Medan";
+    const meta = document.querySelector('meta[name="description"]') || (() => {
+      const m = document.createElement("meta");
+      m.setAttribute("name", "description");
+      document.head.appendChild(m);
+      return m;
+    })();
+    meta.setAttribute(
+      "content",
+      "Kampus Kuphi — kedai kopi cozy di Padang Bulan, Medan. View sawah, sunset terbaik, harga ramah mulai Rp 25rb. Buka tiap hari sampai 01.00."
+    );
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <main>
+      <Navbar />
+      <Hero />
+      <About />
+      <Menu />
+      <Gallery />
+      <Reviews />
+      <Hours />
+      <Visit />
+      <Footer />
+      <WhatsAppFab />
+    </main>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
