@@ -1,12 +1,16 @@
 import { ImageIcon } from "lucide-react";
 import viewSawah from "@/assets/view-sawah.jpg";
+import sunsetSore from "@/assets/sunset-sore.jpg";
+import spotOutdoor from "@/assets/spot-outdoor.jpg";
+import menuKopi from "@/assets/menu-kopi.jpg";
+import suasanaMalam from "@/assets/suasana-malam.jpg";
 
 const tiles = [
   { label: "View Sawah", className: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto", gradient: "from-paddy/80 via-paddy/60 to-accent/40", image: viewSawah },
-  { label: "Sunset Sore", className: "aspect-square", gradient: "from-sunset-1 via-sunset-2 to-sunset-3" },
-  { label: "Spot Outdoor", className: "aspect-square", gradient: "from-coffee to-coffee-dark" },
-  { label: "Menu Kopi", className: "aspect-square", gradient: "from-accent via-sunset-3 to-sunset-2" },
-  { label: "Suasana Malam", className: "aspect-square", gradient: "from-coffee-dark to-sunset-1" },
+  { label: "Sunset Sore", className: "aspect-square", gradient: "from-sunset-1 via-sunset-2 to-sunset-3", image: sunsetSore },
+  { label: "Spot Outdoor", className: "aspect-square", gradient: "from-coffee to-coffee-dark", image: spotOutdoor },
+  { label: "Senja Medan", className: "aspect-square", gradient: "from-accent via-sunset-3 to-sunset-2", image: menuKopi },
+  { label: "Suasana Malam", className: "aspect-square", gradient: "from-coffee-dark to-sunset-1", image: suasanaMalam },
 ];
 
 export const Gallery = () => {
