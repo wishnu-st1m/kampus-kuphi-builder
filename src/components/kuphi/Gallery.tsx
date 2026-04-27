@@ -1,7 +1,8 @@
 import { ImageIcon } from "lucide-react";
+import viewSawah from "@/assets/view-sawah.jpg";
 
 const tiles = [
-  { label: "View Sawah", className: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto", gradient: "from-paddy/80 via-paddy/60 to-accent/40" },
+  { label: "View Sawah", className: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto", gradient: "from-paddy/80 via-paddy/60 to-accent/40", image: viewSawah },
   { label: "Sunset Sore", className: "aspect-square", gradient: "from-sunset-1 via-sunset-2 to-sunset-3" },
   { label: "Spot Outdoor", className: "aspect-square", gradient: "from-coffee to-coffee-dark" },
   { label: "Menu Kopi", className: "aspect-square", gradient: "from-accent via-sunset-3 to-sunset-2" },
@@ -32,12 +33,23 @@ export const Gallery = () => {
               key={i}
               className={`relative ${t.className} rounded-2xl overflow-hidden group cursor-pointer shadow-soft`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient}`} />
+              {t.image ? (
+                <img
+                  src={t.image}
+                  alt={`${t.label} — Kampus Kuphi, view sawah dan suasana outdoor di Padang Bulan, Medan`}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              ) : (
+                <div className={`absolute inset-0 bg-gradient-to-br ${t.gradient}`} />
+              )}
               <div className="absolute inset-0 grain opacity-40" />
               <div className="absolute inset-0 bg-gradient-to-t from-coffee-dark/70 via-transparent to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center text-primary-foreground/60 group-hover:scale-110 transition-transform duration-700">
-                <ImageIcon className="w-10 h-10" strokeWidth={1.2} />
-              </div>
+              {!t.image && (
+                <div className="absolute inset-0 flex items-center justify-center text-primary-foreground/60 group-hover:scale-110 transition-transform duration-700">
+                  <ImageIcon className="w-10 h-10" strokeWidth={1.2} />
+                </div>
+              )}
               <div className="absolute bottom-3 left-4 text-primary-foreground font-display font-semibold text-base md:text-lg drop-shadow-lg">
                 {t.label}
               </div>
@@ -46,7 +58,7 @@ export const Gallery = () => {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground italic">
-          Foto asli akan segera ditambahkan oleh pemilik.
+          Foto lainnya akan segera ditambahkan oleh pemilik.
         </p>
       </div>
     </section>
