@@ -1,105 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Kampus Kuphi — Warm Sunset Design System.
+   All colors HSL. Defined here, used semantically.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Warm sunset palette */
+    --background: 35 40% 97%;
+    --foreground: 20 35% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 36 50% 96%;
+    --card-foreground: 20 35% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 36 50% 96%;
+    --popover-foreground: 20 35% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary = burnt orange / sunset */
+    --primary: 18 78% 48%;
+    --primary-foreground: 36 60% 98%;
+    --primary-glow: 28 92% 60%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary = deep coffee brown */
+    --secondary: 22 38% 18%;
+    --secondary-foreground: 36 60% 96%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 32 28% 90%;
+    --muted-foreground: 22 20% 38%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent = warm gold */
+    --accent: 38 88% 56%;
+    --accent-foreground: 22 38% 14%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 36 60% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 28 30% 86%;
+    --input: 28 30% 86%;
+    --ring: 18 78% 48%;
 
-    --radius: 0.5rem;
+    --radius: 0.85rem;
+
+    /* Brand-specific tokens */
+    --sunset-1: 14 90% 55%;
+    --sunset-2: 28 95% 60%;
+    --sunset-3: 42 95% 62%;
+    --coffee-dark: 22 45% 14%;
+    --coffee: 22 38% 22%;
+    --paddy-green: 88 32% 42%;
+
+    --gradient-sunset: linear-gradient(135deg, hsl(var(--sunset-1)) 0%, hsl(var(--sunset-2)) 50%, hsl(var(--sunset-3)) 100%);
+    --gradient-sky: linear-gradient(180deg, hsl(28 90% 70%) 0%, hsl(42 95% 78%) 60%, hsl(88 35% 70%) 100%);
+    --gradient-coffee: linear-gradient(180deg, hsl(var(--coffee)) 0%, hsl(var(--coffee-dark)) 100%);
+    --gradient-glow: radial-gradient(ellipse at top, hsl(38 95% 65% / 0.45), transparent 60%);
+
+    --shadow-warm: 0 20px 60px -20px hsl(18 78% 40% / 0.45);
+    --shadow-soft: 0 8px 24px -10px hsl(22 45% 20% / 0.25);
+    --shadow-glow: 0 0 80px hsl(38 95% 60% / 0.4);
+
+    --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 22 40% 8%;
+    --foreground: 36 50% 95%;
+    --card: 22 38% 12%;
+    --card-foreground: 36 50% 95%;
+    --popover: 22 38% 12%;
+    --popover-foreground: 36 50% 95%;
+    --primary: 28 92% 58%;
+    --primary-foreground: 22 45% 10%;
+    --secondary: 22 30% 18%;
+    --secondary-foreground: 36 50% 95%;
+    --muted: 22 25% 16%;
+    --muted-foreground: 32 20% 65%;
+    --accent: 38 88% 58%;
+    --accent-foreground: 22 45% 10%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 36 50% 95%;
+    --border: 22 25% 20%;
+    --input: 22 25% 20%;
+    --ring: 28 92% 58%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1, h2, h3, h4 { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
+}
+
+@layer utilities {
+  .bg-gradient-sunset { background-image: var(--gradient-sunset); }
+  .bg-gradient-sky { background-image: var(--gradient-sky); }
+  .bg-gradient-coffee { background-image: var(--gradient-coffee); }
+  .bg-gradient-glow { background-image: var(--gradient-glow); }
+  .text-gradient-sunset {
+    background-image: var(--gradient-sunset);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-warm { box-shadow: var(--shadow-warm); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+
+  .grain::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.2  0 0 0 0 0.05  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
 }
+
+@keyframes sun-rise {
+  0% { transform: translateY(40px) scale(0.92); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-sun-rise { animation: sun-rise 1.2s var(--transition-smooth) both; }
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+.animate-fade-up { animation: fade-up 0.8s var(--transition-smooth) both; }
