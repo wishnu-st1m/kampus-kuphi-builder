@@ -37,7 +37,7 @@ export const Footer = () => {
             <a href="https://wa.me/6283179524020" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-background/10 hover:bg-gradient-sunset flex items-center justify-center transition-all">
               <MessageCircle className="w-4 h-4" />
             </a>
-            <a href="#" className="w-10 h-10 rounded-full bg-background/10 hover:bg-gradient-sunset flex items-center justify-center transition-all">
+            <a href="https://www.instagram.com/kampuskuphii/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-background/10 hover:bg-gradient-sunset flex items-center justify-center transition-all">
               <Instagram className="w-4 h-4" />
             </a>
           </div>
