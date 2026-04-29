@@ -195,13 +195,15 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 
       <CameraRig progressRef={smooth} />
 
-      <group position={[0, -0.2, 0]}>
-        <Bean progressRef={smooth} />
-        <Grinder progressRef={smooth} />
-        <Machine progressRef={smooth} />
-        <Pour progressRef={smooth} />
-        <Cup progressRef={smooth} />
-      </group>
+      <Suspense fallback={null}>
+        <group position={[0, -0.2, 0]}>
+          <Bean progressRef={smooth} eco={eco} />
+          <Grinder progressRef={smooth} />
+          <Machine progressRef={smooth} eco={eco} />
+          <Pour progressRef={smooth} />
+          <Cup progressRef={smooth} eco={eco} />
+        </group>
+      </Suspense>
 
       {!eco && (
         <ContactShadows
