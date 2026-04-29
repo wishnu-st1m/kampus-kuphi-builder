@@ -1,11 +1,12 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, ContactShadows, Float } from "@react-three/drei";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 /**
  * Clay-style 3D coffee journey scene.
  * Driven by external scroll progress (0..1).
+ * Supports an "eco" mode that lowers dpr, disables shadows/env for low-end devices.
  */
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -29,44 +30,98 @@ const CLAY = {
 
 type SceneProps = { progress: number };
 
+/** Detect low-end device → eco mode by default */
+const detectEco = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const nav = navigator as Navigator & {
+    deviceMemory?: number;
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+  const cores = nav.hardwareConcurrency ?? 8;
+  const mem = nav.deviceMemory ?? 8;
+  const saveData = nav.connection?.saveData === true;
+  const slowNet = /(^|-)2g$/.test(nav.connection?.effectiveType ?? "");
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const isMobile = window.matchMedia?.("(max-width: 768px)").matches;
+  // Eco if: low cores/mem, save-data, slow net, reduce-motion, OR low-mem mobile
+  return cores <= 4 || mem <= 4 || saveData || slowNet || reduceMotion || (isMobile && mem <= 6);
+};
+
 export const Hero3DScene = ({ progress }: SceneProps) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [eco, setEco] = useState<boolean>(() => detectEco());
+  const [inView, setInView] = useState(true);
+
+  // Pause rendering when hero is offscreen
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "120px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <Canvas
-      shadows
-      dpr={[1, 1.8]}
-      camera={{ position: [0, 0.4, 5], fov: 38 }}
-      gl={{ antialias: true, alpha: true }}
-    >
-      <color attach="background" args={["#00000000"]} />
-      <SceneContent progress={progress} />
-    </Canvas>
+    <div ref={wrapperRef} className="relative w-full h-full">
+      <Canvas
+        shadows={!eco}
+        dpr={eco ? [1, 1.25] : [1, 1.75]}
+        frameloop={inView ? "always" : "never"}
+        camera={{ position: [0, 0.4, 5], fov: 38 }}
+        gl={{
+          antialias: !eco,
+          alpha: true,
+          powerPreference: eco ? "low-power" : "high-performance",
+        }}
+        performance={{ min: 0.5 }}
+      >
+        <color attach="background" args={["#00000000"]} />
+        <SceneContent progress={progress} eco={eco} />
+      </Canvas>
+
+      {/* Eco toggle */}
+      <button
+        type="button"
+        onClick={() => setEco((v) => !v)}
+        aria-pressed={eco}
+        title={eco ? "Mode Hemat aktif — tap untuk kualitas penuh" : "Aktifkan Mode Hemat"}
+        className="absolute bottom-3 right-3 z-30 pointer-events-auto px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-background/70 backdrop-blur-md border border-coffee-dark/20 text-coffee-dark hover:bg-background/90 transition-colors"
+      >
+        {eco ? "⚡ Mode Hemat" : "✨ Kualitas Penuh"}
+      </button>
+    </div>
   );
 };
 
-const SceneContent = ({ progress }: SceneProps) => {
+const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
   // smoothed progress
   const smooth = useRef(progress);
   useFrame(() => {
     smooth.current = lerp(smooth.current, progress, 0.15);
   });
 
+  const shadowSize = eco ? 512 : 1024;
+
   return (
     <>
       {/* Lighting — soft clay look */}
-      <ambientLight intensity={0.55} />
+      <ambientLight intensity={eco ? 0.75 : 0.55} />
       <directionalLight
         position={[3, 5, 4]}
-        intensity={1.6}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        intensity={eco ? 1.4 : 1.6}
+        castShadow={!eco}
+        shadow-mapSize-width={shadowSize}
+        shadow-mapSize-height={shadowSize}
         shadow-camera-left={-4}
         shadow-camera-right={4}
         shadow-camera-top={4}
         shadow-camera-bottom={-4}
       />
       <directionalLight position={[-4, 2, -2]} intensity={0.4} color="#ffd9a8" />
-      <Environment preset="sunset" />
+      {!eco && <Environment preset="sunset" />}
 
       <CameraRig progressRef={smooth} />
 
@@ -78,14 +133,16 @@ const SceneContent = ({ progress }: SceneProps) => {
         <Cup progressRef={smooth} />
       </group>
 
-      <ContactShadows
-        position={[0, -1.1, 0]}
-        opacity={0.35}
-        scale={8}
-        blur={2.6}
-        far={2}
-        color="#3a1f10"
-      />
+      {!eco && (
+        <ContactShadows
+          position={[0, -1.1, 0]}
+          opacity={0.35}
+          scale={8}
+          blur={2.6}
+          far={2}
+          color="#3a1f10"
+        />
+      )}
     </>
   );
 };
