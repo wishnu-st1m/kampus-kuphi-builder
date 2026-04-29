@@ -277,7 +277,7 @@ const RealisticModel = ({
 };
 
 /* ---------- Bean (stage 0 -> 1) ---------- */
-const Bean = ({ progressRef }: RigProps) => {
+const Bean = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
