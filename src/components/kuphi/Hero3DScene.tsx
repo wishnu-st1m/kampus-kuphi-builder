@@ -1,7 +1,12 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, ContactShadows, Float } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { Environment, ContactShadows, Float, useGLTF } from "@react-three/drei";
+import { useEffect, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
+
+// Preload GLB models so swap from clay → realistic is instant.
+useGLTF.preload("/models/bean.glb");
+useGLTF.preload("/models/machine.glb");
+useGLTF.preload("/models/cup.glb");
 
 /**
  * Clay-style 3D coffee journey scene.
@@ -190,13 +195,15 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 
       <CameraRig progressRef={smooth} />
 
-      <group position={[0, -0.2, 0]}>
-        <Bean progressRef={smooth} />
-        <Grinder progressRef={smooth} />
-        <Machine progressRef={smooth} />
-        <Pour progressRef={smooth} />
-        <Cup progressRef={smooth} />
-      </group>
+      <Suspense fallback={null}>
+        <group position={[0, -0.2, 0]}>
+          <Bean progressRef={smooth} eco={eco} />
+          <Grinder progressRef={smooth} />
+          <Machine progressRef={smooth} eco={eco} />
+          <Pour progressRef={smooth} />
+          <Cup progressRef={smooth} eco={eco} />
+        </group>
+      </Suspense>
 
       {!eco && (
         <ContactShadows
@@ -213,6 +220,7 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 };
 
 type RigProps = { progressRef: React.MutableRefObject<number> };
+type StageProps = RigProps & { eco?: boolean };
 
 const CameraRig = ({ progressRef }: RigProps) => {
   useFrame((state) => {
@@ -230,8 +238,46 @@ const CameraRig = ({ progressRef }: RigProps) => {
 
 const subProg = (p: number, i: number, stages = 5) => clamp(p * stages - i);
 
+/** Loads a GLB and applies cast/receive shadow + soft material upgrade. */
+const RealisticModel = ({
+  url,
+  scale = 1,
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+}: {
+  url: string;
+  scale?: number;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+}) => {
+  const { scene } = useGLTF(url);
+  const cloned = useRef<THREE.Group>();
+  if (!cloned.current) {
+    cloned.current = scene.clone(true);
+    cloned.current.traverse((obj) => {
+      const m = obj as THREE.Mesh;
+      if (m.isMesh) {
+        m.castShadow = true;
+        m.receiveShadow = true;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        if (mat && "roughness" in mat) {
+          mat.envMapIntensity = 0.9;
+        }
+      }
+    });
+  }
+  return (
+    <primitive
+      object={cloned.current}
+      scale={scale}
+      position={position}
+      rotation={rotation}
+    />
+  );
+};
+
 /* ---------- Bean (stage 0 -> 1) ---------- */
-const Bean = ({ progressRef }: RigProps) => {
+const Bean = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
@@ -253,16 +299,21 @@ const Bean = ({ progressRef }: RigProps) => {
   return (
     <group ref={ref}>
       <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.4}>
-        {/* Bean body — squashed sphere */}
-        <mesh castShadow receiveShadow>
-          <sphereGeometry args={[0.7, 48, 48]} />
-          <meshStandardMaterial color={CLAY.bean} roughness={0.85} metalness={0.05} />
-        </mesh>
-        {/* Bean crease */}
-        <mesh rotation={[0, 0, 0]} scale={[0.05, 1.05, 0.72]}>
-          <sphereGeometry args={[0.7, 32, 32]} />
-          <meshStandardMaterial color={CLAY.beanHi} roughness={1} />
-        </mesh>
+        {eco ? (
+          <>
+            {/* Clay bean — sphere */}
+            <mesh castShadow receiveShadow>
+              <sphereGeometry args={[0.7, 48, 48]} />
+              <meshStandardMaterial color={CLAY.bean} roughness={0.85} metalness={0.05} />
+            </mesh>
+            <mesh rotation={[0, 0, 0]} scale={[0.05, 1.05, 0.72]}>
+              <sphereGeometry args={[0.7, 32, 32]} />
+              <meshStandardMaterial color={CLAY.beanHi} roughness={1} />
+            </mesh>
+          </>
+        ) : (
+          <RealisticModel url="/models/bean.glb" scale={1.2} position={[0, -0.1, 0]} />
+        )}
       </Float>
     </group>
   );
@@ -327,7 +378,7 @@ const Grinder = ({ progressRef }: RigProps) => {
 };
 
 /* ---------- Machine (stage 2 -> 3) ---------- */
-const Machine = ({ progressRef }: RigProps) => {
+const Machine = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   const light = useRef<THREE.Mesh>(null);
   const steam = useRef<THREE.Group>(null);
@@ -368,40 +419,47 @@ const Machine = ({ progressRef }: RigProps) => {
           </mesh>
         ))}
       </group>
-      {/* Body */}
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.6, 1.1, 0.95]} />
-        <meshStandardMaterial color={CLAY.bodyDark} roughness={0.8} />
-      </mesh>
-      {/* Top deck */}
-      <mesh position={[0, 1.08, 0]} castShadow>
-        <boxGeometry args={[1.5, 0.08, 0.85]} />
-        <meshStandardMaterial color={CLAY.metal} metalness={0.6} roughness={0.4} />
-      </mesh>
-      {/* Pressure gauge */}
-      <mesh position={[-0.45, 0.55, 0.48]} rotation={[0, 0, 0]}>
-        <cylinderGeometry args={[0.18, 0.18, 0.06, 32]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.6} />
-      </mesh>
-      {/* Power light */}
+      {eco ? (
+        <>
+          {/* Body */}
+          <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.6, 1.1, 0.95]} />
+            <meshStandardMaterial color={CLAY.bodyDark} roughness={0.8} />
+          </mesh>
+          {/* Top deck */}
+          <mesh position={[0, 1.08, 0]} castShadow>
+            <boxGeometry args={[1.5, 0.08, 0.85]} />
+            <meshStandardMaterial color={CLAY.metal} metalness={0.6} roughness={0.4} />
+          </mesh>
+          {/* Pressure gauge */}
+          <mesh position={[-0.45, 0.55, 0.48]} rotation={[0, 0, 0]}>
+            <cylinderGeometry args={[0.18, 0.18, 0.06, 32]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.6} />
+          </mesh>
+          {/* Group head */}
+          <mesh position={[0, -0.12, 0.45]} castShadow>
+            <cylinderGeometry args={[0.18, 0.16, 0.18, 24]} />
+            <meshStandardMaterial color={CLAY.metalDark} metalness={0.7} roughness={0.4} />
+          </mesh>
+          {/* Portafilter handle */}
+          <mesh position={[0.5, -0.18, 0.45]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.45, 16]} />
+            <meshStandardMaterial color={CLAY.bean} roughness={0.9} />
+          </mesh>
+          {/* Drip tray */}
+          <mesh position={[0, -0.45, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.5, 0.08, 0.85]} />
+            <meshStandardMaterial color={CLAY.metal} metalness={0.5} roughness={0.5} />
+          </mesh>
+        </>
+      ) : (
+        /* Realistic GLB espresso machine */
+        <RealisticModel url="/models/machine.glb" scale={1.6} position={[0, -0.5, 0]} />
+      )}
+      {/* Power light (kept for both modes — animated indicator) */}
       <mesh ref={light} position={[0.5, 0.55, 0.49]}>
         <sphereGeometry args={[0.06, 16, 16]} />
         <meshStandardMaterial color={CLAY.accent} emissive={CLAY.accent} emissiveIntensity={1} />
-      </mesh>
-      {/* Group head */}
-      <mesh position={[0, -0.12, 0.45]} castShadow>
-        <cylinderGeometry args={[0.18, 0.16, 0.18, 24]} />
-        <meshStandardMaterial color={CLAY.metalDark} metalness={0.7} roughness={0.4} />
-      </mesh>
-      {/* Portafilter handle */}
-      <mesh position={[0.5, -0.18, 0.45]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0.05, 0.05, 0.45, 16]} />
-        <meshStandardMaterial color={CLAY.bean} roughness={0.9} />
-      </mesh>
-      {/* Drip tray */}
-      <mesh position={[0, -0.45, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.5, 0.08, 0.85]} />
-        <meshStandardMaterial color={CLAY.metal} metalness={0.5} roughness={0.5} />
       </mesh>
     </group>
   );
@@ -430,7 +488,7 @@ const Pour = ({ progressRef }: RigProps) => {
 };
 
 /* ---------- Cup (stages 3-4) ---------- */
-const Cup = ({ progressRef }: RigProps) => {
+const Cup = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   const fill = useRef<THREE.Mesh>(null);
   const crema = useRef<THREE.Mesh>(null);
@@ -473,36 +531,47 @@ const Cup = ({ progressRef }: RigProps) => {
 
   return (
     <group ref={ref} position={[0, -0.85, 0]}>
-      {/* Saucer */}
-      <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.85, 0.8, 0.06, 48]} />
-        <meshStandardMaterial color={CLAY.saucer} roughness={0.85} />
-      </mesh>
-      {/* Cup body (slight cone) */}
-      <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.55, 0.45, 0.45, 48, 1, false]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
-      </mesh>
-      {/* Cup rim (torus) */}
-      <mesh position={[0, 0.27, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.55, 0.025, 16, 48]} />
-        <meshStandardMaterial color={CLAY.cupRim} roughness={0.7} />
-      </mesh>
-      {/* Handle */}
-      <mesh position={[0.6, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <torusGeometry args={[0.18, 0.04, 12, 24, Math.PI]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
-      </mesh>
-      {/* Espresso fill */}
-      <mesh ref={fill} position={[0, 0.05, 0]}>
-        <cylinderGeometry args={[0.52, 0.43, 0.42, 40]} />
-        <meshStandardMaterial color={CLAY.espresso} roughness={0.3} metalness={0.2} />
-      </mesh>
-      {/* Crema */}
-      <mesh ref={crema} position={[0, 0.26, 0]}>
-        <cylinderGeometry args={[0.52, 0.52, 0.02, 40]} />
-        <meshStandardMaterial color={CLAY.crema} roughness={0.6} />
-      </mesh>
+      {eco ? (
+        <>
+          {/* Saucer */}
+          <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.85, 0.8, 0.06, 48]} />
+            <meshStandardMaterial color={CLAY.saucer} roughness={0.85} />
+          </mesh>
+          {/* Cup body (slight cone) */}
+          <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.55, 0.45, 0.45, 48, 1, false]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
+          </mesh>
+          {/* Cup rim (torus) */}
+          <mesh position={[0, 0.27, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.55, 0.025, 16, 48]} />
+            <meshStandardMaterial color={CLAY.cupRim} roughness={0.7} />
+          </mesh>
+          {/* Handle */}
+          <mesh position={[0.6, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <torusGeometry args={[0.18, 0.04, 12, 24, Math.PI]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
+          </mesh>
+        </>
+      ) : (
+        /* Realistic GLB espresso cup with saucer */
+        <RealisticModel url="/models/cup.glb" scale={1.0} position={[0, -0.2, 0]} />
+      )}
+      {eco && (
+        <>
+          {/* Espresso fill */}
+          <mesh ref={fill} position={[0, 0.05, 0]}>
+            <cylinderGeometry args={[0.52, 0.43, 0.42, 40]} />
+            <meshStandardMaterial color={CLAY.espresso} roughness={0.3} metalness={0.2} />
+          </mesh>
+          {/* Crema */}
+          <mesh ref={crema} position={[0, 0.26, 0]}>
+            <cylinderGeometry args={[0.52, 0.52, 0.02, 40]} />
+            <meshStandardMaterial color={CLAY.crema} roughness={0.6} />
+          </mesh>
+        </>
+      )}
       {/* Steam ribbons */}
       <group ref={steam} position={[0, 0.3, 0]}>
         {[0, 1, 2].map((i) => (

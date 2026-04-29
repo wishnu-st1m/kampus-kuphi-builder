@@ -48,6 +48,13 @@ export const Footer = () => {
           <span>© {new Date().getFullYear()} Kampus Kuphi. Dibuat dengan ❤ di Medan.</span>
           <span>Padang Bulan Selayang I, Medan</span>
         </div>
+        <div className="container pb-5 text-[10px] text-primary-foreground/35 leading-relaxed">
+          Model 3D: "Coffee bean" & "Espresso coffee" oleh{" "}
+          <a href="https://poly.pizza/u/Poly%20by%20Google" className="underline hover:text-accent" target="_blank" rel="noreferrer">Poly by Google</a>,
+          {" "}"Coffee Machine" oleh{" "}
+          <a href="https://poly.pizza/u/J-Toastie" className="underline hover:text-accent" target="_blank" rel="noreferrer">J-Toastie</a>
+          {" "}via <a href="https://poly.pizza" className="underline hover:text-accent" target="_blank" rel="noreferrer">poly.pizza</a> (CC-BY).
+        </div>
       </div>
     </footer>
   );
