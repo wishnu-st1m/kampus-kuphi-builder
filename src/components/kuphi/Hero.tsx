@@ -121,10 +121,10 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Center scene */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="relative w-full max-w-[480px] aspect-square mt-8">
-            <CoffeeJourneySVG s0={s0} s1={s1} s2={s2} s3={s3} s4={s4} />
+        {/* Center scene — 3D clay coffee journey */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-full max-w-[640px] aspect-square mt-8">
+            <Hero3DScene progress={progress} />
           </div>
         </div>
 
