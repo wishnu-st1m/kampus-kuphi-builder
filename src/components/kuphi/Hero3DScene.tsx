@@ -220,6 +220,7 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 };
 
 type RigProps = { progressRef: React.MutableRefObject<number> };
+type StageProps = RigProps & { eco?: boolean };
 
 const CameraRig = ({ progressRef }: RigProps) => {
   useFrame((state) => {
@@ -236,6 +237,44 @@ const CameraRig = ({ progressRef }: RigProps) => {
 };
 
 const subProg = (p: number, i: number, stages = 5) => clamp(p * stages - i);
+
+/** Loads a GLB and applies cast/receive shadow + soft material upgrade. */
+const RealisticModel = ({
+  url,
+  scale = 1,
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+}: {
+  url: string;
+  scale?: number;
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+}) => {
+  const { scene } = useGLTF(url);
+  const cloned = useRef<THREE.Group>();
+  if (!cloned.current) {
+    cloned.current = scene.clone(true);
+    cloned.current.traverse((obj) => {
+      const m = obj as THREE.Mesh;
+      if (m.isMesh) {
+        m.castShadow = true;
+        m.receiveShadow = true;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        if (mat && "roughness" in mat) {
+          mat.envMapIntensity = 0.9;
+        }
+      }
+    });
+  }
+  return (
+    <primitive
+      object={cloned.current}
+      scale={scale}
+      position={position}
+      rotation={rotation}
+    />
+  );
+};
 
 /* ---------- Bean (stage 0 -> 1) ---------- */
 const Bean = ({ progressRef }: RigProps) => {
