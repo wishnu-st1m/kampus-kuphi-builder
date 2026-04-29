@@ -299,16 +299,21 @@ const Bean = ({ progressRef, eco = true }: StageProps) => {
   return (
     <group ref={ref}>
       <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.4}>
-        {/* Bean body — squashed sphere */}
-        <mesh castShadow receiveShadow>
-          <sphereGeometry args={[0.7, 48, 48]} />
-          <meshStandardMaterial color={CLAY.bean} roughness={0.85} metalness={0.05} />
-        </mesh>
-        {/* Bean crease */}
-        <mesh rotation={[0, 0, 0]} scale={[0.05, 1.05, 0.72]}>
-          <sphereGeometry args={[0.7, 32, 32]} />
-          <meshStandardMaterial color={CLAY.beanHi} roughness={1} />
-        </mesh>
+        {eco ? (
+          <>
+            {/* Clay bean — sphere */}
+            <mesh castShadow receiveShadow>
+              <sphereGeometry args={[0.7, 48, 48]} />
+              <meshStandardMaterial color={CLAY.bean} roughness={0.85} metalness={0.05} />
+            </mesh>
+            <mesh rotation={[0, 0, 0]} scale={[0.05, 1.05, 0.72]}>
+              <sphereGeometry args={[0.7, 32, 32]} />
+              <meshStandardMaterial color={CLAY.beanHi} roughness={1} />
+            </mesh>
+          </>
+        ) : (
+          <RealisticModel url="/models/bean.glb" scale={1.2} position={[0, -0.1, 0]} />
+        )}
       </Float>
     </group>
   );
