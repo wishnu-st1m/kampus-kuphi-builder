@@ -66,13 +66,6 @@ export const Hero = () => {
   const stageFloat = progress * (STAGES - 1);
   const activeStage = Math.min(STAGES - 1, Math.round(stageFloat));
 
-  // Per-stage sub progress 0..1
-  const s0 = subProg(progress, 0); // bean entrance
-  const s1 = subProg(progress, 1); // grinding
-  const s2 = subProg(progress, 2); // brewing
-  const s3 = subProg(progress, 3); // pouring
-  const s4 = subProg(progress, 4); // cup
-
   return (
     <section
       id="top"
