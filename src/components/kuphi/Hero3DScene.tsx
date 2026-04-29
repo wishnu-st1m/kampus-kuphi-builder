@@ -373,7 +373,7 @@ const Grinder = ({ progressRef }: RigProps) => {
 };
 
 /* ---------- Machine (stage 2 -> 3) ---------- */
-const Machine = ({ progressRef }: RigProps) => {
+const Machine = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   const light = useRef<THREE.Mesh>(null);
   const steam = useRef<THREE.Group>(null);
