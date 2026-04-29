@@ -167,8 +167,8 @@ export const Hero = () => {
             <div
               className="mt-44 md:mt-40 flex flex-wrap items-center gap-3 transition-all duration-500"
               style={{
-                opacity: s4 > 0.4 ? 1 : 0,
-                transform: `translateY(${s4 > 0.4 ? 0 : 12}px)`,
+                opacity: progress > 0.85 ? 1 : 0,
+                transform: `translateY(${progress > 0.85 ? 0 : 12}px)`,
               }}
             >
               <a
