@@ -558,16 +558,20 @@ const Cup = ({ progressRef, eco = true }: StageProps) => {
         /* Realistic GLB espresso cup with saucer */
         <RealisticModel url="/models/cup.glb" scale={1.0} position={[0, -0.2, 0]} />
       )}
-      {/* Espresso fill */}
-      <mesh ref={fill} position={[0, 0.05, 0]}>
-        <cylinderGeometry args={[0.52, 0.43, 0.42, 40]} />
-        <meshStandardMaterial color={CLAY.espresso} roughness={0.3} metalness={0.2} />
-      </mesh>
-      {/* Crema */}
-      <mesh ref={crema} position={[0, 0.26, 0]}>
-        <cylinderGeometry args={[0.52, 0.52, 0.02, 40]} />
-        <meshStandardMaterial color={CLAY.crema} roughness={0.6} />
-      </mesh>
+      {eco && (
+        <>
+          {/* Espresso fill */}
+          <mesh ref={fill} position={[0, 0.05, 0]}>
+            <cylinderGeometry args={[0.52, 0.43, 0.42, 40]} />
+            <meshStandardMaterial color={CLAY.espresso} roughness={0.3} metalness={0.2} />
+          </mesh>
+          {/* Crema */}
+          <mesh ref={crema} position={[0, 0.26, 0]}>
+            <cylinderGeometry args={[0.52, 0.52, 0.02, 40]} />
+            <meshStandardMaterial color={CLAY.crema} roughness={0.6} />
+          </mesh>
+        </>
+      )}
       {/* Steam ribbons */}
       <group ref={steam} position={[0, 0.3, 0]}>
         {[0, 1, 2].map((i) => (
