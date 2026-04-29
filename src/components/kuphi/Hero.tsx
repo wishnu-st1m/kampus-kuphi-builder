@@ -41,8 +41,6 @@ const stageContent = [
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
-// Map a sub-progress for stage i (each stage occupies 1/STAGES of the total)
-const subProg = (p: number, i: number) => clamp(p * STAGES - i);
 
 export const Hero = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
