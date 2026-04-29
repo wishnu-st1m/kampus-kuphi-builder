@@ -531,26 +531,33 @@ const Cup = ({ progressRef, eco = true }: StageProps) => {
 
   return (
     <group ref={ref} position={[0, -0.85, 0]}>
-      {/* Saucer */}
-      <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.85, 0.8, 0.06, 48]} />
-        <meshStandardMaterial color={CLAY.saucer} roughness={0.85} />
-      </mesh>
-      {/* Cup body (slight cone) */}
-      <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.55, 0.45, 0.45, 48, 1, false]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
-      </mesh>
-      {/* Cup rim (torus) */}
-      <mesh position={[0, 0.27, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.55, 0.025, 16, 48]} />
-        <meshStandardMaterial color={CLAY.cupRim} roughness={0.7} />
-      </mesh>
-      {/* Handle */}
-      <mesh position={[0.6, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <torusGeometry args={[0.18, 0.04, 12, 24, Math.PI]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
-      </mesh>
+      {eco ? (
+        <>
+          {/* Saucer */}
+          <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.85, 0.8, 0.06, 48]} />
+            <meshStandardMaterial color={CLAY.saucer} roughness={0.85} />
+          </mesh>
+          {/* Cup body (slight cone) */}
+          <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.55, 0.45, 0.45, 48, 1, false]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
+          </mesh>
+          {/* Cup rim (torus) */}
+          <mesh position={[0, 0.27, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.55, 0.025, 16, 48]} />
+            <meshStandardMaterial color={CLAY.cupRim} roughness={0.7} />
+          </mesh>
+          {/* Handle */}
+          <mesh position={[0.6, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <torusGeometry args={[0.18, 0.04, 12, 24, Math.PI]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.7} />
+          </mesh>
+        </>
+      ) : (
+        /* Realistic GLB espresso cup with saucer */
+        <RealisticModel url="/models/cup.glb" scale={1.0} position={[0, -0.2, 0]} />
+      )}
       {/* Espresso fill */}
       <mesh ref={fill} position={[0, 0.05, 0]}>
         <cylinderGeometry args={[0.52, 0.43, 0.42, 40]} />
