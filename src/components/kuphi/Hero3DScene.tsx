@@ -1,7 +1,12 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, ContactShadows, Float } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { Environment, ContactShadows, Float, useGLTF } from "@react-three/drei";
+import { useEffect, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
+
+// Preload GLB models so swap from clay → realistic is instant.
+useGLTF.preload("/models/bean.glb");
+useGLTF.preload("/models/machine.glb");
+useGLTF.preload("/models/cup.glb");
 
 /**
  * Clay-style 3D coffee journey scene.
