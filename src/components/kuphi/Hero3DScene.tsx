@@ -476,7 +476,7 @@ const Pour = ({ progressRef }: RigProps) => {
 };
 
 /* ---------- Cup (stages 3-4) ---------- */
-const Cup = ({ progressRef }: RigProps) => {
+const Cup = ({ progressRef, eco = true }: StageProps) => {
   const ref = useRef<THREE.Group>(null);
   const fill = useRef<THREE.Mesh>(null);
   const crema = useRef<THREE.Mesh>(null);
