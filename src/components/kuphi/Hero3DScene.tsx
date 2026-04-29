@@ -419,40 +419,47 @@ const Machine = ({ progressRef, eco = true }: StageProps) => {
           </mesh>
         ))}
       </group>
-      {/* Body */}
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.6, 1.1, 0.95]} />
-        <meshStandardMaterial color={CLAY.bodyDark} roughness={0.8} />
-      </mesh>
-      {/* Top deck */}
-      <mesh position={[0, 1.08, 0]} castShadow>
-        <boxGeometry args={[1.5, 0.08, 0.85]} />
-        <meshStandardMaterial color={CLAY.metal} metalness={0.6} roughness={0.4} />
-      </mesh>
-      {/* Pressure gauge */}
-      <mesh position={[-0.45, 0.55, 0.48]} rotation={[0, 0, 0]}>
-        <cylinderGeometry args={[0.18, 0.18, 0.06, 32]} />
-        <meshStandardMaterial color={CLAY.cup} roughness={0.6} />
-      </mesh>
-      {/* Power light */}
+      {eco ? (
+        <>
+          {/* Body */}
+          <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.6, 1.1, 0.95]} />
+            <meshStandardMaterial color={CLAY.bodyDark} roughness={0.8} />
+          </mesh>
+          {/* Top deck */}
+          <mesh position={[0, 1.08, 0]} castShadow>
+            <boxGeometry args={[1.5, 0.08, 0.85]} />
+            <meshStandardMaterial color={CLAY.metal} metalness={0.6} roughness={0.4} />
+          </mesh>
+          {/* Pressure gauge */}
+          <mesh position={[-0.45, 0.55, 0.48]} rotation={[0, 0, 0]}>
+            <cylinderGeometry args={[0.18, 0.18, 0.06, 32]} />
+            <meshStandardMaterial color={CLAY.cup} roughness={0.6} />
+          </mesh>
+          {/* Group head */}
+          <mesh position={[0, -0.12, 0.45]} castShadow>
+            <cylinderGeometry args={[0.18, 0.16, 0.18, 24]} />
+            <meshStandardMaterial color={CLAY.metalDark} metalness={0.7} roughness={0.4} />
+          </mesh>
+          {/* Portafilter handle */}
+          <mesh position={[0.5, -0.18, 0.45]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.45, 16]} />
+            <meshStandardMaterial color={CLAY.bean} roughness={0.9} />
+          </mesh>
+          {/* Drip tray */}
+          <mesh position={[0, -0.45, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.5, 0.08, 0.85]} />
+            <meshStandardMaterial color={CLAY.metal} metalness={0.5} roughness={0.5} />
+          </mesh>
+        </>
+      ) : (
+        /* Realistic GLB espresso machine */
+        <RealisticModel url="/models/machine.glb" scale={1.6} position={[0, -0.5, 0]} />
+      )}
+      {/* Power light (kept for both modes — animated indicator) */}
       <mesh ref={light} position={[0.5, 0.55, 0.49]}>
         <sphereGeometry args={[0.06, 16, 16]} />
         <meshStandardMaterial color={CLAY.accent} emissive={CLAY.accent} emissiveIntensity={1} />
-      </mesh>
-      {/* Group head */}
-      <mesh position={[0, -0.12, 0.45]} castShadow>
-        <cylinderGeometry args={[0.18, 0.16, 0.18, 24]} />
-        <meshStandardMaterial color={CLAY.metalDark} metalness={0.7} roughness={0.4} />
-      </mesh>
-      {/* Portafilter handle */}
-      <mesh position={[0.5, -0.18, 0.45]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0.05, 0.05, 0.45, 16]} />
-        <meshStandardMaterial color={CLAY.bean} roughness={0.9} />
-      </mesh>
-      {/* Drip tray */}
-      <mesh position={[0, -0.45, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.5, 0.08, 0.85]} />
-        <meshStandardMaterial color={CLAY.metal} metalness={0.5} roughness={0.5} />
       </mesh>
     </group>
   );
