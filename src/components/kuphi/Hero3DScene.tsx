@@ -30,6 +30,42 @@ const CLAY = {
 
 type SceneProps = { progress: number };
 
+/** Probe GPU renderer string via WEBGL_debug_renderer_info. Returns lowercased name or "". */
+const probeGPU = (): { renderer: string; tier: "low" | "mid" | "high" } => {
+  if (typeof document === "undefined") return { renderer: "", tier: "mid" };
+  try {
+    const canvas = document.createElement("canvas");
+    const gl =
+      (canvas.getContext("webgl2") as WebGL2RenderingContext | null) ||
+      (canvas.getContext("webgl") as WebGLRenderingContext | null) ||
+      (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null);
+    if (!gl) return { renderer: "", tier: "low" }; // no webgl → definitely eco
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    const raw = ext ? (gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) as string) : "";
+    const r = (raw || "").toLowerCase();
+
+    // Heuristic tiers based on common GPU substrings
+    const lowHints = [
+      "swiftshader", "llvmpipe", "software", "mali-4", "mali-t6", "mali-t7",
+      "mali-g31", "mali-g51", "mali-g52", "mali-g57",
+      "adreno (3", "adreno (4", "adreno (5", "adreno (61", "adreno (62",
+      "powervr sgx", "powervr ge", "intel(r) hd graphics 4", "intel hd graphics 4",
+      "videocore", "tegra 3", "tegra 4",
+    ];
+    const highHints = [
+      "rtx", "radeon rx", "radeon pro", "apple m", "apple a1", "apple a2",
+      "adreno (7", "adreno (8", "mali-g78", "mali-g710", "mali-g715",
+      "geforce gtx 16", "geforce gtx 20", "geforce gtx 30", "geforce gtx 40",
+      "intel iris", "intel(r) iris",
+    ];
+    if (lowHints.some((h) => r.includes(h))) return { renderer: r, tier: "low" };
+    if (highHints.some((h) => r.includes(h))) return { renderer: r, tier: "high" };
+    return { renderer: r, tier: "mid" };
+  } catch {
+    return { renderer: "", tier: "mid" };
+  }
+};
+
 /** Detect low-end device → eco mode by default */
 const detectEco = (): boolean => {
   if (typeof window === "undefined") return false;
@@ -40,11 +76,40 @@ const detectEco = (): boolean => {
   const cores = nav.hardwareConcurrency ?? 8;
   const mem = nav.deviceMemory ?? 8;
   const saveData = nav.connection?.saveData === true;
-  const slowNet = /(^|-)2g$/.test(nav.connection?.effectiveType ?? "");
+  const slowNet = /(^|-)(2g|slow-2g)$/.test(nav.connection?.effectiveType ?? "");
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = window.matchMedia?.("(max-width: 768px)").matches;
-  // Eco if: low cores/mem, save-data, slow net, reduce-motion, OR low-mem mobile
-  return cores <= 4 || mem <= 4 || saveData || slowNet || reduceMotion || (isMobile && mem <= 6);
+
+  // Screen-size signals (use both CSS px and physical px)
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  const physicalPixels = w * h * dpr * dpr;
+  const isSmallScreen = w <= 480; // small phones
+  const isMobile = w <= 768;
+  const isHugeRender = physicalPixels > 4_000_000; // e.g. retina laptop / tablet — heavy fillrate
+
+  // GPU signal
+  const gpu = probeGPU();
+
+  // Hard eco triggers (always on)
+  if (saveData || slowNet || reduceMotion) return true;
+  if (gpu.tier === "low") return true;
+  if (cores <= 2 || mem <= 2) return true;
+
+  // Soft eco: combine weak signals
+  let score = 0;
+  if (cores <= 4) score += 2;
+  if (mem <= 4) score += 2;
+  if (isSmallScreen) score += 2;
+  if (isMobile && mem <= 6) score += 1;
+  if (isMobile && gpu.tier !== "high") score += 1;
+  if (isHugeRender && gpu.tier !== "high") score += 2; // heavy fillrate on non-flagship GPU
+  if (gpu.tier === "mid" && isMobile) score += 1;
+
+  // High-tier GPU on a desktop overrides borderline scores
+  if (gpu.tier === "high" && !isMobile) return false;
+
+  return score >= 4;
 };
 
 export const Hero3DScene = ({ progress }: SceneProps) => {
