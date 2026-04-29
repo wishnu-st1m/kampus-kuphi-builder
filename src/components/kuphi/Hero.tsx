@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Star, MapPin, Clock } from "lucide-react";
+import { Hero3DScene } from "./Hero3DScene";
 
 /**
  * Scroll-triggered storytelling Hero.
