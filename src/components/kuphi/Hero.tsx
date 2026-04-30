@@ -65,6 +65,7 @@ export const Hero = () => {
   const activeStage = Math.min(STAGES - 1, Math.round(stageFloat));
 
   return (
+    <>
     <section
       id="top"
       ref={wrapperRef}
