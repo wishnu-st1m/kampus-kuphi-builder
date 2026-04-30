@@ -257,7 +257,12 @@ const RealisticModel = ({
         m.receiveShadow = true;
         const mat = m.material as THREE.MeshStandardMaterial;
         if (mat && "roughness" in mat) {
-          mat.envMapIntensity = 0.9;
+          mat.envMapIntensity = 1.6;
+          // Slightly tighten roughness for crisper highlights without going plastic
+          if (typeof mat.roughness === "number") {
+            mat.roughness = Math.max(0.25, mat.roughness * 0.85);
+          }
+          mat.needsUpdate = true;
         }
       }
     });
