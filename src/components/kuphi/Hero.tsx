@@ -143,18 +143,20 @@ export const Hero = () => {
                     }}
                   >
                     <div className="container px-0">
-                      <span className="text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
-                        {c.eyebrow}
-                      </span>
-                      <h1 className="mt-2 font-display font-black text-4xl sm:text-5xl md:text-6xl text-coffee-dark leading-[0.95]">
-                        {c.title.split(" ").slice(0, -1).join(" ")}{" "}
-                        <span className="italic text-gradient-sunset">
-                          {c.title.split(" ").slice(-1)}
+                      <div className="inline-block max-w-xl rounded-2xl bg-background/70 backdrop-blur-md border border-background/50 shadow-soft px-5 py-4 md:px-6 md:py-5">
+                        <span className="text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
+                          {c.eyebrow}
                         </span>
-                      </h1>
-                      <p className="mt-3 text-sm md:text-base text-coffee max-w-md leading-relaxed">
-                        {c.desc}
-                      </p>
+                        <h1 className="mt-2 font-display font-black text-4xl sm:text-5xl md:text-6xl text-coffee-dark leading-[0.95]">
+                          {c.title.split(" ").slice(0, -1).join(" ")}{" "}
+                          <span className="italic text-gradient-sunset">
+                            {c.title.split(" ").slice(-1)}
+                          </span>
+                        </h1>
+                        <p className="mt-3 text-sm md:text-base text-coffee-dark/90 max-w-md leading-relaxed font-medium">
+                          {c.desc}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
