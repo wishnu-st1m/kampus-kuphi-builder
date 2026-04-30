@@ -134,13 +134,18 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
     return () => io.disconnect();
   }, []);
 
+  // Responsive camera tuning — small screens need wider FOV / further dolly
+  const isSmall = typeof window !== "undefined" && window.innerWidth < 640;
+  const fov = isSmall ? 46 : 38;
+  const camZ = isSmall ? 5.6 : 5;
+
   return (
     <div ref={wrapperRef} className="relative w-full h-full">
       <Canvas
         shadows={!eco}
         dpr={eco ? [1, 1.25] : [1, 1.75]}
         frameloop={inView ? "always" : "never"}
-        camera={{ position: [0, 0.4, 5], fov: 38 }}
+        camera={{ position: [0, 0.4, camZ], fov }}
         gl={{
           antialias: !eco,
           alpha: true,

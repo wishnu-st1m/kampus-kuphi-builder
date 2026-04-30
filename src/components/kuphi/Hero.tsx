@@ -120,8 +120,8 @@ export const Hero = () => {
         </div>
 
         {/* Center scene — 3D clay coffee journey */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-full max-w-[640px] aspect-square mt-8">
+        <div className="absolute inset-x-0 top-[12vh] md:top-[8vh] bottom-[42vh] md:bottom-[38vh] flex items-center justify-center pointer-events-none">
+          <div className="relative h-full aspect-square max-h-full max-w-[90vw] mx-auto pointer-events-auto">
             <Hero3DScene progress={progress} />
           </div>
         </div>
