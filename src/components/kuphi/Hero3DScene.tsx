@@ -147,8 +147,8 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
           powerPreference: eco ? "low-power" : "high-performance",
         }}
         performance={{ min: 0.5 }}
+        style={{ background: "transparent" }}
       >
-        <color attach="background" args={["#00000000"]} />
         <SceneContent progress={progress} eco={eco} />
       </Canvas>
 
