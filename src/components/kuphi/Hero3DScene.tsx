@@ -96,25 +96,13 @@ const detectEco = (): boolean => {
   // GPU signal
   const gpu = probeGPU();
 
-  // Hard eco triggers (always on)
+  // Hard eco triggers ONLY — keep realistic by default
   if (saveData || slowNet || reduceMotion) return true;
   if (gpu.tier === "low") return true;
   if (cores <= 2 || mem <= 2) return true;
-
-  // Soft eco: combine weak signals
-  let score = 0;
-  if (cores <= 4) score += 2;
-  if (mem <= 4) score += 2;
-  if (isSmallScreen) score += 2;
-  if (isMobile && mem <= 6) score += 1;
-  if (isMobile && gpu.tier !== "high") score += 1;
-  if (isHugeRender && gpu.tier !== "high") score += 2; // heavy fillrate on non-flagship GPU
-  if (gpu.tier === "mid" && isMobile) score += 1;
-
-  // High-tier GPU on a desktop overrides borderline scores
-  if (gpu.tier === "high" && !isMobile) return false;
-
-  return score >= 4;
+  // Very small phones with non-high GPU → eco
+  if (isSmallScreen && gpu.tier !== "high" && mem <= 4) return true;
+  return false;
 };
 
 export const Hero3DScene = ({ progress }: SceneProps) => {
