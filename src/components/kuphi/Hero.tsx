@@ -195,17 +195,18 @@ export const Hero = () => {
           ↓ Scroll
         </div>
       </div>
-
-      {/* Quick stats — appears after pinned section */}
-      <StickyStatsSpacer />
     </section>
+
+    {/* Quick stats — sebagai section sendiri di bawah hero */}
+    <QuickStats />
+    </>
   );
 };
 
-const StickyStatsSpacer = () => (
-  <div className="absolute bottom-0 left-0 right-0 z-30 pb-10">
+const QuickStats = () => (
+  <section className="bg-background py-10 md:py-14 border-y border-coffee-dark/10">
     <div className="container">
-      <div className="mx-auto max-w-3xl grid grid-cols-3 gap-px bg-coffee-dark/15 rounded-2xl overflow-hidden backdrop-blur-md border border-background/40 shadow-soft">
+      <div className="mx-auto max-w-3xl grid grid-cols-3 gap-px bg-coffee-dark/10 rounded-2xl overflow-hidden border border-coffee-dark/10 shadow-soft">
         {[
           { icon: Star, label: "Rating Google", value: "4,5", sub: "145 ulasan" },
           { icon: Clock, label: "Jam paling rame", value: "16–22", sub: "sore – malam" },
@@ -213,7 +214,7 @@ const StickyStatsSpacer = () => (
         ].map((s) => (
           <div
             key={s.label}
-            className="bg-background/70 backdrop-blur-md p-4 md:p-6 text-center"
+            className="bg-card p-4 md:p-6 text-center"
           >
             <s.icon className="w-5 h-5 mx-auto text-primary" />
             <div className="mt-2 font-display font-black text-2xl md:text-3xl text-coffee-dark">
@@ -227,6 +228,6 @@ const StickyStatsSpacer = () => (
         ))}
       </div>
     </div>
-  </div>
+  </section>
 );
 
