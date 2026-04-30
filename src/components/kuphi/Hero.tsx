@@ -128,62 +128,56 @@ export const Hero = () => {
         </div>
 
         {/* Text panel */}
-        <div className="absolute left-0 right-0 bottom-[26vh] md:bottom-[24vh] z-20">
+        <div className="absolute left-0 right-0 bottom-[22vh] md:bottom-[20vh] z-20">
           <div className="container">
-            <div className="max-w-xl">
+            <div className="relative max-w-xl min-h-[260px] md:min-h-[240px]">
               {stageContent.map((c, i) => {
                 const isActive = i === activeStage;
+                const isLast = i === STAGES - 1;
                 return (
                   <div
                     key={i}
-                    className="absolute inset-x-0 transition-all duration-500"
+                    className="absolute inset-x-0 top-0 transition-all duration-500"
                     style={{
                       opacity: isActive ? 1 : 0,
                       transform: `translateY(${isActive ? 0 : 16}px)`,
                       pointerEvents: isActive ? "auto" : "none",
                     }}
                   >
-                    <div className="container px-0">
-                      <div className="inline-block max-w-xl rounded-2xl bg-background/70 backdrop-blur-md border border-background/50 shadow-soft px-5 py-4 md:px-6 md:py-5">
-                        <span className="text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
-                          {c.eyebrow}
+                    <div className="inline-block max-w-xl rounded-2xl bg-background/75 backdrop-blur-md border border-background/50 shadow-soft px-5 py-4 md:px-6 md:py-5">
+                      <span className="text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
+                        {c.eyebrow}
+                      </span>
+                      <h1 className="mt-2 font-display font-black text-4xl sm:text-5xl md:text-6xl text-coffee-dark leading-[0.95]">
+                        {c.title.split(" ").slice(0, -1).join(" ")}{" "}
+                        <span className="italic text-gradient-sunset">
+                          {c.title.split(" ").slice(-1)}
                         </span>
-                        <h1 className="mt-2 font-display font-black text-4xl sm:text-5xl md:text-6xl text-coffee-dark leading-[0.95]">
-                          {c.title.split(" ").slice(0, -1).join(" ")}{" "}
-                          <span className="italic text-gradient-sunset">
-                            {c.title.split(" ").slice(-1)}
-                          </span>
-                        </h1>
-                        <p className="mt-3 text-sm md:text-base text-coffee-dark/90 max-w-md leading-relaxed font-medium">
-                          {c.desc}
-                        </p>
-                      </div>
+                      </h1>
+                      <p className="mt-3 text-sm md:text-base text-coffee-dark/90 max-w-md leading-relaxed font-medium">
+                        {c.desc}
+                      </p>
+
+                      {isLast && (
+                        <div className="mt-5 flex flex-wrap items-center gap-3">
+                          <a
+                            href="#menu"
+                            className="px-6 py-3 rounded-full bg-coffee-dark text-primary-foreground font-semibold shadow-warm hover:scale-105 transition-transform"
+                          >
+                            Lihat Menu
+                          </a>
+                          <a
+                            href="#kunjungi"
+                            className="px-6 py-3 rounded-full bg-background/80 border border-coffee-dark/20 text-coffee-dark font-semibold hover:bg-background transition-colors"
+                          >
+                            Cara ke Sini
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
-            </div>
-
-            {/* CTA appears at last stage */}
-            <div
-              className="mt-44 md:mt-40 flex flex-wrap items-center gap-3 transition-all duration-500"
-              style={{
-                opacity: progress > 0.85 ? 1 : 0,
-                transform: `translateY(${progress > 0.85 ? 0 : 12}px)`,
-              }}
-            >
-              <a
-                href="#menu"
-                className="px-7 py-3.5 rounded-full bg-coffee-dark text-primary-foreground font-semibold shadow-warm hover:scale-105 transition-transform"
-              >
-                Lihat Menu
-              </a>
-              <a
-                href="#kunjungi"
-                className="px-7 py-3.5 rounded-full bg-background/60 backdrop-blur-md border border-coffee-dark/20 text-coffee-dark font-semibold hover:bg-background/80 transition-colors"
-              >
-                Cara ke Sini
-              </a>
             </div>
           </div>
         </div>
