@@ -169,26 +169,29 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 
   return (
     <>
-      {/* Lighting — soft clay look */}
-      <ambientLight intensity={eco ? 0.75 : 0.55} />
+      {/* Lighting — warm sunset realism */}
+      <ambientLight intensity={eco ? 0.75 : 0.45} />
       <directionalLight
         position={[3, 5, 4]}
-        intensity={eco ? 1.4 : 1.6}
+        intensity={eco ? 1.4 : 1.9}
+        color="#fff1d6"
         castShadow={!eco}
         shadow-mapSize-width={shadowSize}
         shadow-mapSize-height={shadowSize}
+        shadow-bias={-0.0005}
         shadow-camera-left={-4}
         shadow-camera-right={4}
         shadow-camera-top={4}
         shadow-camera-bottom={-4}
       />
-      <directionalLight position={[-4, 2, -2]} intensity={0.4} color="#ffd9a8" />
+      <directionalLight position={[-4, 2, -2]} intensity={0.55} color="#ff9b66" />
       {!eco && <Environment preset="sunset" />}
 
       <CameraRig progressRef={smooth} />
 
       <Suspense fallback={null}>
-        <group position={[0, -0.2, 0]}>
+        {/* Slightly bigger overall scene for hero presence */}
+        <group position={[0, -0.25, 0]} scale={1.2}>
           <Bean progressRef={smooth} eco={eco} />
           <Grinder progressRef={smooth} />
           <Machine progressRef={smooth} eco={eco} />
@@ -199,12 +202,13 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 
       {!eco && (
         <ContactShadows
-          position={[0, -1.1, 0]}
-          opacity={0.35}
-          scale={8}
-          blur={2.6}
-          far={2}
-          color="#3a1f10"
+          position={[0, -1.15, 0]}
+          opacity={0.45}
+          scale={9}
+          blur={2.4}
+          far={2.5}
+          resolution={1024}
+          color="#2a1208"
         />
       )}
     </>
