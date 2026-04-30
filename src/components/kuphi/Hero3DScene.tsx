@@ -122,10 +122,9 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
     return () => io.disconnect();
   }, []);
 
-  // Responsive camera tuning — small screens need wider FOV / further dolly
   const isSmall = typeof window !== "undefined" && window.innerWidth < 640;
-  const fov = isSmall ? 46 : 38;
-  const camZ = isSmall ? 5.6 : 5;
+  const fov = isSmall ? 42 : 34;
+  const camZ = isSmall ? 5.0 : 4.4;
 
   return (
     <div ref={wrapperRef} className="relative w-full h-full">
