@@ -130,14 +130,16 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
   return (
     <div ref={wrapperRef} className="relative w-full h-full">
       <Canvas
-        shadows={!eco}
-        dpr={eco ? [1, 1.25] : [1, 1.75]}
+        shadows
+        dpr={[1, 2]}
         frameloop={inView ? "always" : "never"}
         camera={{ position: [0, 0.4, camZ], fov }}
         gl={{
-          antialias: !eco,
+          antialias: true,
           alpha: true,
-          powerPreference: eco ? "low-power" : "high-performance",
+          powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.05,
         }}
         performance={{ min: 0.5 }}
         style={{ background: "transparent" }}
@@ -156,33 +158,36 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
     smooth.current = lerp(smooth.current, progress, 0.15);
   });
 
-  const shadowSize = eco ? 512 : 1024;
+  const shadowSize = 2048;
 
   return (
     <>
-      {/* Lighting — warm sunset realism */}
-      <ambientLight intensity={eco ? 0.75 : 0.45} />
+      {/* Lighting — cinematic warm sunset realism */}
+      <ambientLight intensity={0.35} />
+      <hemisphereLight args={["#ffd9a8", "#3a2418", 0.45]} />
       <directionalLight
-        position={[3, 5, 4]}
-        intensity={eco ? 1.4 : 1.9}
+        position={[3.5, 5.5, 4]}
+        intensity={2.2}
         color="#fff1d6"
-        castShadow={!eco}
+        castShadow
         shadow-mapSize-width={shadowSize}
         shadow-mapSize-height={shadowSize}
-        shadow-bias={-0.0005}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
         shadow-camera-left={-4}
         shadow-camera-right={4}
         shadow-camera-top={4}
         shadow-camera-bottom={-4}
       />
-      <directionalLight position={[-4, 2, -2]} intensity={0.55} color="#ff9b66" />
-      {!eco && <Environment preset="sunset" />}
+      <directionalLight position={[-4, 2, -2]} intensity={0.7} color="#ff8a4c" />
+      <pointLight position={[0, 1.2, 2.5]} intensity={0.5} color="#ffd1a0" />
+      <Environment preset="sunset" background={false} />
 
       <CameraRig progressRef={smooth} />
 
       <Suspense fallback={null}>
         {/* Slightly bigger overall scene for hero presence */}
-        <group position={[0, -0.25, 0]} scale={1.2}>
+        <group position={[0, -0.25, 0]} scale={1.25}>
           <Bean progressRef={smooth} eco={eco} />
           <Grinder progressRef={smooth} />
           <Machine progressRef={smooth} eco={eco} />
@@ -191,17 +196,15 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
         </group>
       </Suspense>
 
-      {!eco && (
-        <ContactShadows
-          position={[0, -1.15, 0]}
-          opacity={0.45}
-          scale={9}
-          blur={2.4}
-          far={2.5}
-          resolution={1024}
-          color="#2a1208"
-        />
-      )}
+      <ContactShadows
+        position={[0, -1.15, 0]}
+        opacity={0.55}
+        scale={10}
+        blur={2.2}
+        far={2.8}
+        resolution={2048}
+        color="#1f0d05"
+      />
     </>
   );
 };
@@ -248,10 +251,12 @@ const RealisticModel = ({
         m.receiveShadow = true;
         const mat = m.material as THREE.MeshStandardMaterial;
         if (mat && "roughness" in mat) {
-          mat.envMapIntensity = 1.6;
-          // Slightly tighten roughness for crisper highlights without going plastic
+          mat.envMapIntensity = 2.0;
           if (typeof mat.roughness === "number") {
-            mat.roughness = Math.max(0.25, mat.roughness * 0.85);
+            mat.roughness = Math.max(0.22, mat.roughness * 0.8);
+          }
+          if ("metalness" in mat && typeof mat.metalness === "number") {
+            mat.metalness = Math.min(1, mat.metalness * 1.05);
           }
           mat.needsUpdate = true;
         }
