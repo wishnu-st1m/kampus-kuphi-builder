@@ -130,14 +130,16 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
   return (
     <div ref={wrapperRef} className="relative w-full h-full">
       <Canvas
-        shadows={!eco}
-        dpr={eco ? [1, 1.25] : [1, 1.75]}
+        shadows
+        dpr={[1, 2]}
         frameloop={inView ? "always" : "never"}
         camera={{ position: [0, 0.4, camZ], fov }}
         gl={{
-          antialias: !eco,
+          antialias: true,
           alpha: true,
-          powerPreference: eco ? "low-power" : "high-performance",
+          powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.05,
         }}
         performance={{ min: 0.5 }}
         style={{ background: "transparent" }}
