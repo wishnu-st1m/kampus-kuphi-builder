@@ -107,7 +107,8 @@ const detectEco = (): boolean => {
 
 export const Hero3DScene = ({ progress }: SceneProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [eco, setEco] = useState<boolean>(() => detectEco());
+  // Always full quality — no eco toggle
+  const eco = false;
   const [inView, setInView] = useState(true);
 
   // Pause rendering when hero is offscreen
