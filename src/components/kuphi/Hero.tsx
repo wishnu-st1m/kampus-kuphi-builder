@@ -127,8 +127,11 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Text panel — kompak agar tidak menutupi 3D */}
-        <div className="absolute left-0 right-0 bottom-[14vh] md:bottom-[10vh] z-20">
+        {/* Text panel — stage 1-4 mentok bawah, stage 5 naik agar CTA terlihat */}
+        <div
+          className="absolute left-0 right-0 z-20 transition-[bottom] duration-500"
+          style={{ bottom: activeStage === STAGES - 1 ? "12vh" : "3vh" }}
+        >
           <div className="container">
             <div className="relative max-w-sm md:max-w-md min-h-[200px] md:min-h-[190px]">
               {stageContent.map((c, i) => {
