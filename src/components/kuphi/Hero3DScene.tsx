@@ -187,7 +187,7 @@ const SceneContent = ({ progress, eco }: SceneProps & { eco: boolean }) => {
 
       <Suspense fallback={null}>
         {/* Slightly bigger overall scene for hero presence */}
-        <group position={[0, -0.25, 0]} scale={1.25}>
+        <group position={[0, -0.25, 0]} scale={1.0}>
           <Bean progressRef={smooth} eco={eco} />
           <Grinder progressRef={smooth} />
           <Machine progressRef={smooth} eco={eco} />
