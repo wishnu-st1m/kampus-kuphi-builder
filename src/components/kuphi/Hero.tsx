@@ -120,17 +120,17 @@ export const Hero = () => {
           </div>
         </div>
 
-        {/* Center scene — 3D clay coffee journey */}
-        <div className="absolute inset-x-0 top-[12vh] md:top-[8vh] bottom-[42vh] md:bottom-[38vh] flex items-center justify-center pointer-events-none">
-          <div className="relative h-full aspect-square max-h-full max-w-[90vw] mx-auto pointer-events-auto">
+        {/* Center scene — 3D coffee journey filling the whole viewport */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="relative w-full h-full pointer-events-auto">
             <Hero3DScene progress={progress} />
           </div>
         </div>
 
-        {/* Text panel */}
-        <div className="absolute left-0 right-0 bottom-[22vh] md:bottom-[20vh] z-20">
+        {/* Text panel — kompak agar tidak menutupi 3D */}
+        <div className="absolute left-0 right-0 bottom-[14vh] md:bottom-[10vh] z-20">
           <div className="container">
-            <div className="relative max-w-xl min-h-[260px] md:min-h-[240px]">
+            <div className="relative max-w-sm md:max-w-md min-h-[200px] md:min-h-[190px]">
               {stageContent.map((c, i) => {
                 const isActive = i === activeStage;
                 const isLast = i === STAGES - 1;
@@ -144,31 +144,31 @@ export const Hero = () => {
                       pointerEvents: isActive ? "auto" : "none",
                     }}
                   >
-                    <div className="inline-block max-w-xl rounded-2xl bg-background/75 backdrop-blur-md border border-background/50 shadow-soft px-5 py-4 md:px-6 md:py-5">
-                      <span className="text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
+                    <div className="inline-block max-w-md rounded-xl bg-background/70 backdrop-blur-md border border-background/50 shadow-soft px-4 py-3 md:px-5 md:py-4">
+                      <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
                         {c.eyebrow}
                       </span>
-                      <h1 className="mt-2 font-display font-black text-4xl sm:text-5xl md:text-6xl text-coffee-dark leading-[0.95]">
+                      <h1 className="mt-1.5 font-display font-black text-2xl sm:text-3xl md:text-4xl text-coffee-dark leading-[1]">
                         {c.title.split(" ").slice(0, -1).join(" ")}{" "}
                         <span className="italic text-gradient-sunset">
                           {c.title.split(" ").slice(-1)}
                         </span>
                       </h1>
-                      <p className="mt-3 text-sm md:text-base text-coffee-dark/90 max-w-md leading-relaxed font-medium">
+                      <p className="mt-2 text-xs md:text-sm text-coffee-dark/90 max-w-sm leading-relaxed">
                         {c.desc}
                       </p>
 
                       {isLast && (
-                        <div className="mt-5 flex flex-wrap items-center gap-3">
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
                           <a
                             href="#menu"
-                            className="px-6 py-3 rounded-full bg-coffee-dark text-primary-foreground font-semibold shadow-warm hover:scale-105 transition-transform"
+                            className="px-4 py-2 rounded-full bg-coffee-dark text-primary-foreground text-sm font-semibold shadow-warm hover:scale-105 transition-transform"
                           >
                             Lihat Menu
                           </a>
                           <a
                             href="#kunjungi"
-                            className="px-6 py-3 rounded-full bg-background/80 border border-coffee-dark/20 text-coffee-dark font-semibold hover:bg-background transition-colors"
+                            className="px-4 py-2 rounded-full bg-background/80 border border-coffee-dark/20 text-coffee-dark text-sm font-semibold hover:bg-background transition-colors"
                           >
                             Cara ke Sini
                           </a>

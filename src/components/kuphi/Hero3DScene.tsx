@@ -107,7 +107,8 @@ const detectEco = (): boolean => {
 
 export const Hero3DScene = ({ progress }: SceneProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [eco, setEco] = useState<boolean>(() => detectEco());
+  // Always full quality — no eco toggle
+  const eco = false;
   const [inView, setInView] = useState(true);
 
   // Pause rendering when hero is offscreen
@@ -144,16 +145,6 @@ export const Hero3DScene = ({ progress }: SceneProps) => {
         <SceneContent progress={progress} eco={eco} />
       </Canvas>
 
-      {/* Eco toggle */}
-      <button
-        type="button"
-        onClick={() => setEco((v) => !v)}
-        aria-pressed={eco}
-        title={eco ? "Mode Hemat aktif — tap untuk kualitas penuh" : "Aktifkan Mode Hemat"}
-        className="absolute bottom-3 right-3 z-30 pointer-events-auto px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-background/70 backdrop-blur-md border border-coffee-dark/20 text-coffee-dark hover:bg-background/90 transition-colors"
-      >
-        {eco ? "⚡ Mode Hemat" : "✨ Kualitas Penuh"}
-      </button>
     </div>
   );
 };
