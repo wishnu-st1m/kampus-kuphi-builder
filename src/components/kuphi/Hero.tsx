@@ -133,7 +133,7 @@ export const Hero = () => {
           style={{ bottom: activeStage === STAGES - 1 ? "12vh" : "3vh" }}
         >
           <div className="container">
-            <div className="relative max-w-sm md:max-w-md min-h-[200px] md:min-h-[190px]">
+            <div className="relative max-w-xs md:max-w-sm min-h-[170px] md:min-h-[160px]">
               {stageContent.map((c, i) => {
                 const isActive = i === activeStage;
                 const isLast = i === STAGES - 1;
@@ -143,35 +143,35 @@ export const Hero = () => {
                     className="absolute inset-x-0 top-0 transition-all duration-500"
                     style={{
                       opacity: isActive ? 1 : 0,
-                      transform: `translateY(${isActive ? 0 : 16}px)`,
+                      transform: `translateY(${isActive ? 0 : 12}px)`,
                       pointerEvents: isActive ? "auto" : "none",
                     }}
                   >
-                    <div className="inline-block max-w-md rounded-xl bg-background/70 backdrop-blur-md border border-background/50 shadow-soft px-4 py-3 md:px-5 md:py-4">
-                      <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-coffee font-semibold">
+                    <div className="inline-block max-w-sm rounded-lg bg-background/75 backdrop-blur-md border border-background/50 shadow-soft px-3.5 py-2.5 md:px-4 md:py-3">
+                      <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-coffee font-semibold">
                         {c.eyebrow}
                       </span>
-                      <h1 className="mt-1.5 font-display font-black text-2xl sm:text-3xl md:text-4xl text-coffee-dark leading-[1]">
+                      <h1 className="mt-1 font-display font-black text-xl sm:text-2xl md:text-[1.7rem] text-coffee-dark leading-[1.05]">
                         {c.title.split(" ").slice(0, -1).join(" ")}{" "}
                         <span className="italic text-gradient-sunset">
                           {c.title.split(" ").slice(-1)}
                         </span>
                       </h1>
-                      <p className="mt-2 text-xs md:text-sm text-coffee-dark/90 max-w-sm leading-relaxed">
+                      <p className="mt-1.5 text-[11px] md:text-xs text-coffee-dark/90 max-w-xs leading-snug">
                         {c.desc}
                       </p>
 
                       {isLast && (
-                        <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <div className="mt-2.5 flex flex-wrap items-center gap-2">
                           <a
                             href="#menu"
-                            className="px-4 py-2 rounded-full bg-coffee-dark text-primary-foreground text-sm font-semibold shadow-warm hover:scale-105 transition-transform"
+                            className="px-3.5 py-1.5 rounded-full bg-coffee-dark text-primary-foreground text-xs font-semibold shadow-warm hover:scale-105 transition-transform"
                           >
                             Lihat Menu
                           </a>
                           <a
                             href="#kunjungi"
-                            className="px-4 py-2 rounded-full bg-background/80 border border-coffee-dark/20 text-coffee-dark text-sm font-semibold hover:bg-background transition-colors"
+                            className="px-3.5 py-1.5 rounded-full bg-background/80 border border-coffee-dark/20 text-coffee-dark text-xs font-semibold hover:bg-background transition-colors"
                           >
                             Cara ke Sini
                           </a>
