@@ -251,10 +251,12 @@ const RealisticModel = ({
         m.receiveShadow = true;
         const mat = m.material as THREE.MeshStandardMaterial;
         if (mat && "roughness" in mat) {
-          mat.envMapIntensity = 1.6;
-          // Slightly tighten roughness for crisper highlights without going plastic
+          mat.envMapIntensity = 2.0;
           if (typeof mat.roughness === "number") {
-            mat.roughness = Math.max(0.25, mat.roughness * 0.85);
+            mat.roughness = Math.max(0.22, mat.roughness * 0.8);
+          }
+          if ("metalness" in mat && typeof mat.metalness === "number") {
+            mat.metalness = Math.min(1, mat.metalness * 1.05);
           }
           mat.needsUpdate = true;
         }
