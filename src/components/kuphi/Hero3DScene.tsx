@@ -320,8 +320,12 @@ const Bean = ({ progressRef, eco = true }: StageProps) => {
 const Grinder = ({ progressRef }: RigProps) => {
   const ref = useRef<THREE.Group>(null);
   const burr = useRef<THREE.Mesh>(null);
+  const burr2 = useRef<THREE.Mesh>(null);
+  const motor = useRef<THREE.Group>(null);
   const grounds = useRef<THREE.Mesh>(null);
-  useFrame((_, dt) => {
+  const particles = useRef<THREE.Group>(null);
+  const beansInHopper = useRef<THREE.Group>(null);
+  useFrame((state, dt) => {
     if (!ref.current) return;
     const p = progressRef.current;
     const s1 = subProg(p, 1);
@@ -330,44 +334,158 @@ const Grinder = ({ progressRef }: RigProps) => {
     ref.current.position.y = lerp(-2.5, 0, s1) + lerp(0, 1, s2);
     ref.current.scale.setScalar(visible > 0.02 ? 1 : 0);
     (ref.current as any).visible = visible > 0.02;
-    if (burr.current) burr.current.rotation.y += dt * 8 * s1;
+
+    // Spinning burrs (counter-rotating)
+    if (burr.current) burr.current.rotation.y += dt * 10 * s1;
+    if (burr2.current) burr2.current.rotation.y -= dt * 14 * s1;
+    // Subtle motor vibration
+    if (motor.current) {
+      motor.current.position.x = Math.sin(state.clock.elapsedTime * 40) * 0.004 * s1;
+    }
+    // Beans level drops as grinding progresses
+    if (beansInHopper.current) {
+      const drop = clamp(s1 * 1.2);
+      beansInHopper.current.position.y = lerp(0.95, 0.78, drop);
+      beansInHopper.current.scale.y = lerp(1, 0.55, drop);
+    }
+    // Falling ground particles
+    if (particles.current) {
+      const t = clamp((s1 - 0.35) * 1.6);
+      particles.current.children.forEach((c, i) => {
+        const m = c as THREE.Mesh;
+        const phase = (state.clock.elapsedTime * 1.4 + i * 0.27) % 1;
+        m.position.y = lerp(-0.28, -0.5, phase);
+        m.position.x = (i - 3) * 0.022 + Math.sin(phase * 6 + i) * 0.015;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        mat.opacity = t * (1 - phase) * 0.95;
+      });
+    }
     if (grounds.current) {
       const g = clamp((s1 - 0.5) * 2);
-      grounds.current.scale.set(g * 1.2, g * 0.4, g * 1.2);
+      grounds.current.scale.set(g * 1.2, g * 0.45, g * 1.2);
       (grounds.current as any).visible = g > 0.05;
     }
   });
 
   return (
     <group ref={ref}>
-      {/* Hopper (cone) */}
+      {/* Hopper lid */}
+      <mesh position={[0, 1.18, 0]} castShadow>
+        <cylinderGeometry args={[0.62, 0.62, 0.05, 32]} />
+        <meshStandardMaterial color={CLAY.metal} metalness={0.85} roughness={0.25} />
+      </mesh>
+      {/* Lid knob */}
+      <mesh position={[0, 1.24, 0]} castShadow>
+        <cylinderGeometry args={[0.08, 0.1, 0.06, 24]} />
+        <meshStandardMaterial color={CLAY.metalDark} metalness={0.9} roughness={0.2} />
+      </mesh>
+      {/* Transparent hopper (glass) */}
       <mesh position={[0, 0.85, 0]} castShadow>
-        <cylinderGeometry args={[0.65, 0.4, 0.55, 32]} />
-        <meshStandardMaterial color={CLAY.metal} roughness={0.4} metalness={0.6} />
+        <cylinderGeometry args={[0.6, 0.42, 0.6, 48, 1, true]} />
+        <meshPhysicalMaterial
+          color="#f7e8d2"
+          transparent
+          opacity={0.35}
+          roughness={0.05}
+          metalness={0}
+          transmission={0.85}
+          thickness={0.2}
+          ior={1.45}
+          clearcoat={1}
+          clearcoatRoughness={0.05}
+          side={THREE.DoubleSide}
+        />
       </mesh>
-      {/* Beans inside hopper */}
-      <mesh position={[0, 0.95, 0]} castShadow>
-        <sphereGeometry args={[0.32, 24, 24]} />
-        <meshStandardMaterial color={CLAY.bean} roughness={0.9} />
+      {/* Beans pile inside hopper (multiple little spheres) */}
+      <group ref={beansInHopper} position={[0, 0.95, 0]}>
+        {Array.from({ length: 14 }).map((_, i) => {
+          const a = (i / 14) * Math.PI * 2;
+          const r = 0.12 + (i % 3) * 0.08;
+          return (
+            <mesh
+              key={i}
+              position={[Math.cos(a) * r, (i % 4) * 0.05 - 0.05, Math.sin(a) * r]}
+              rotation={[a, i, 0]}
+              castShadow
+            >
+              <sphereGeometry args={[0.075, 12, 12]} />
+              <meshStandardMaterial color={CLAY.bean} roughness={0.85} metalness={0.05} />
+            </mesh>
+          );
+        })}
+      </group>
+      {/* Collar between hopper and body */}
+      <mesh position={[0, 0.55, 0]} castShadow>
+        <cylinderGeometry args={[0.45, 0.45, 0.08, 32]} />
+        <meshStandardMaterial color={CLAY.metalDark} metalness={0.9} roughness={0.25} />
       </mesh>
-      {/* Body */}
-      <mesh position={[0, 0.2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.1, 0.7, 0.9]} />
-        <meshStandardMaterial color={CLAY.bodyDark} roughness={0.85} />
+      {/* Main body — cylindrical brushed metal */}
+      <group ref={motor}>
+        <mesh position={[0, 0.18, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.5, 0.55, 0.65, 48]} />
+          <meshStandardMaterial color={CLAY.metal} metalness={0.85} roughness={0.35} />
+        </mesh>
+        {/* Brand/seam ring */}
+        <mesh position={[0, 0.32, 0]}>
+          <torusGeometry args={[0.5, 0.012, 8, 48]} />
+          <meshStandardMaterial color={CLAY.metalDark} metalness={1} roughness={0.2} />
+        </mesh>
+        {/* Vent slots */}
+        {Array.from({ length: 8 }).map((_, i) => {
+          const a = (i / 8) * Math.PI * 2;
+          return (
+            <mesh
+              key={i}
+              position={[Math.cos(a) * 0.51, 0.05, Math.sin(a) * 0.51]}
+              rotation={[0, -a, 0]}
+            >
+              <boxGeometry args={[0.015, 0.18, 0.06]} />
+              <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
+            </mesh>
+          );
+        })}
+      </group>
+      {/* Inner burr chamber visible from front cutout */}
+      <mesh ref={burr} position={[0, 0.42, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.22, 0.04, 16, 48]} />
+        <meshStandardMaterial color={CLAY.metalDark} metalness={1} roughness={0.15} />
       </mesh>
-      {/* Burr (visible disc) */}
-      <mesh ref={burr} position={[0, 0.55, 0.46]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.18, 0.05, 12, 24]} />
-        <meshStandardMaterial color={CLAY.metalDark} metalness={0.8} roughness={0.3} />
+      <mesh ref={burr2} position={[0, 0.42, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.18, 0.08, 24, 1, true]} />
+        <meshStandardMaterial color="#3a3a3a" metalness={0.95} roughness={0.2} side={THREE.DoubleSide} />
+      </mesh>
+      {/* Adjustment dial on side */}
+      <mesh position={[0.52, 0.18, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.09, 0.09, 0.06, 24]} />
+        <meshStandardMaterial color={CLAY.bean} roughness={0.6} metalness={0.3} />
+      </mesh>
+      {/* Power button */}
+      <mesh position={[-0.5, 0.05, 0.05]} castShadow>
+        <cylinderGeometry args={[0.04, 0.04, 0.04, 16]} />
+        <meshStandardMaterial color={CLAY.accent} emissive={CLAY.accent} emissiveIntensity={0.6} />
       </mesh>
       {/* Spout */}
-      <mesh position={[0, -0.25, 0]} castShadow>
-        <cylinderGeometry args={[0.18, 0.12, 0.18, 24]} />
+      <mesh position={[0, -0.2, 0]} castShadow>
+        <cylinderGeometry args={[0.16, 0.1, 0.18, 24]} />
+        <meshStandardMaterial color={CLAY.metalDark} metalness={0.85} roughness={0.3} />
+      </mesh>
+      {/* Falling ground coffee particles */}
+      <group ref={particles} position={[0, 0, 0]}>
+        {Array.from({ length: 7 }).map((_, i) => (
+          <mesh key={i}>
+            <sphereGeometry args={[0.018, 8, 8]} />
+            <meshStandardMaterial color={CLAY.bean} roughness={1} transparent opacity={0} />
+          </mesh>
+        ))}
+      </group>
+      {/* Catch tray base */}
+      <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.55, 0.55, 0.06, 32]} />
         <meshStandardMaterial color={CLAY.metalDark} metalness={0.7} roughness={0.4} />
       </mesh>
-      {/* Ground pile */}
-      <mesh ref={grounds} position={[0, -0.55, 0]} castShadow>
-        <sphereGeometry args={[0.4, 24, 24]} />
+      {/* Ground pile mound */}
+      <mesh ref={grounds} position={[0, -0.45, 0]} castShadow>
+        <sphereGeometry args={[0.32, 24, 24]} />
         <meshStandardMaterial color={CLAY.bean} roughness={1} />
       </mesh>
     </group>
