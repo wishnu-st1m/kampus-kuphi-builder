@@ -1,4 +1,5 @@
 import { Star, Quote } from "lucide-react";
+import { Reveal } from "./Reveal";
 
 const reviews = [
   {
@@ -52,9 +53,12 @@ export const Reviews = () => {
 
         <div className="mt-14 grid md:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
-            <article
+            <Reveal
               key={i}
-              className="relative p-7 rounded-3xl bg-card border border-border hover:shadow-warm transition-all hover:-translate-y-1"
+              as="article"
+              variant="up"
+              delay={i * 150}
+              className="relative p-7 rounded-3xl bg-card border border-border hover:shadow-warm transition-shadow"
             >
               <Quote className="absolute top-5 right-6 w-10 h-10 text-primary/15" />
               <div className="flex items-center gap-3">
@@ -75,7 +79,7 @@ export const Reviews = () => {
                 "{r.text}"
               </p>
               <div className="mt-4 text-xs text-muted-foreground/70">{r.time}</div>
-            </article>
+            </Reveal>
           ))}
         </div>
       </div>

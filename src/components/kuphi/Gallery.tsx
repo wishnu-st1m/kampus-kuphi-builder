@@ -4,6 +4,7 @@ import sunsetSore from "@/assets/sunset-sore.jpg";
 import spotOutdoor from "@/assets/spot-outdoor.jpg";
 import menuKopi from "@/assets/menu-kopi.jpg";
 import suasanaMalam from "@/assets/suasana-malam.jpg";
+import { Reveal } from "./Reveal";
 
 const tiles = [
   { label: "View Sawah", className: "md:col-span-2 md:row-span-2 aspect-square md:aspect-auto", gradient: "from-paddy/80 via-paddy/60 to-accent/40", image: viewSawah },
@@ -33,8 +34,10 @@ export const Gallery = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {tiles.map((t, i) => (
-            <div
+            <Reveal
               key={i}
+              variant={i % 2 === 0 ? "up" : "zoom"}
+              delay={i * 90}
               className={`relative ${t.className} rounded-2xl overflow-hidden group cursor-pointer shadow-soft`}
             >
               {t.image ? (
@@ -57,7 +60,7 @@ export const Gallery = () => {
               <div className="absolute bottom-3 left-4 text-primary-foreground font-display font-semibold text-base md:text-lg drop-shadow-lg">
                 {t.label}
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
 
