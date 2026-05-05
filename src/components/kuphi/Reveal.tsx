@@ -34,7 +34,7 @@ export const Reveal = ({
   delay = 0,
   duration = 800,
   className,
-  once = true,
+  once = false,
   threshold = 0.15,
   distance = 40,
 }: RevealProps) => {
