@@ -8,6 +8,7 @@ import { Hours } from "@/components/kuphi/Hours";
 import { Visit } from "@/components/kuphi/Visit";
 import { Footer } from "@/components/kuphi/Footer";
 import { WhatsAppFab } from "@/components/kuphi/WhatsAppFab";
+import { ScrollProgress } from "@/components/kuphi/ScrollProgress";
 import { useEffect } from "react";
 
 const Index = () => {
@@ -27,6 +28,7 @@ const Index = () => {
 
   return (
     <main>
+      <ScrollProgress />
       <Navbar />
       <Hero />
       <About />

@@ -1,4 +1,5 @@
 import { Sunset, Trees, Users } from "lucide-react";
+import { Reveal } from "./Reveal";
 
 const features = [
   {
@@ -24,7 +25,7 @@ export const About = () => {
       <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-glow opacity-60" />
 
       <div className="container relative grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        <div>
+        <Reveal variant="right">
           <span className="text-xs uppercase tracking-[0.2em] text-primary font-semibold">
             Tentang Kami
           </span>
@@ -42,14 +43,15 @@ export const About = () => {
             Buka sampai dini hari, harga ramah kantong (Rp 25–50 rb), dan selalu siap jadi
             "kampus kedua" buat ngerjain tugas atau sekadar melepas penat.
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-5">
           {features.map((f, i) => (
-            <div
+            <Reveal
               key={f.title}
+              variant="left"
+              delay={i * 120}
               className="group relative p-6 md:p-7 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all hover:shadow-warm hover:-translate-y-1"
-              style={{ animationDelay: `${i * 0.1}s` }}
             >
               <div className="flex items-start gap-5">
                 <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-sunset flex items-center justify-center shadow-warm">
@@ -62,7 +64,7 @@ export const About = () => {
                   <p className="mt-1.5 text-muted-foreground leading-relaxed">{f.desc}</p>
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

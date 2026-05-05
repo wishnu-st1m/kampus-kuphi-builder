@@ -1,4 +1,5 @@
 import { Coffee, UtensilsCrossed, Soup } from "lucide-react";
+import { Reveal } from "./Reveal";
 
 const menu = [
   {
@@ -28,7 +29,7 @@ export const Menu = () => {
       <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-sunset opacity-20 blur-3xl rounded-full" />
 
       <div className="container relative">
-        <div className="text-center max-w-2xl mx-auto">
+        <Reveal variant="up" className="text-center max-w-2xl mx-auto">
           <span className="text-xs uppercase tracking-[0.2em] text-accent font-semibold">
             Menu Andalan
           </span>
@@ -38,13 +39,15 @@ export const Menu = () => {
           <p className="mt-5 text-primary-foreground/70 text-lg">
             Harga ramah mahasiswa — Rp 25.000 sampai Rp 50.000 per orang.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-14 grid md:grid-cols-3 gap-6">
-          {menu.map((m) => (
-            <div
+          {menu.map((m, i) => (
+            <Reveal
               key={m.name}
-              className="group relative p-8 rounded-3xl bg-background/5 backdrop-blur-sm border border-background/10 hover:border-accent/50 transition-all hover:-translate-y-2 hover:bg-background/10"
+              variant="up"
+              delay={i * 140}
+              className="group relative p-8 rounded-3xl bg-background/5 backdrop-blur-sm border border-background/10 hover:border-accent/50 transition-colors hover:bg-background/10"
             >
               <div className="w-14 h-14 rounded-2xl bg-gradient-sunset flex items-center justify-center shadow-warm group-hover:rotate-6 transition-transform">
                 <m.icon className="w-7 h-7 text-primary-foreground" />
@@ -54,7 +57,7 @@ export const Menu = () => {
               <span className="mt-5 inline-block text-xs font-semibold uppercase tracking-wider text-accent">
                 {m.tag}
               </span>
-            </div>
+            </Reveal>
           ))}
         </div>
 
