@@ -1,4 +1,5 @@
 import { MapPin, Phone, Navigation, MessageCircle } from "lucide-react";
+import { Reveal } from "./Reveal";
 
 const ADDRESS = "Jl. Abdul Hakim, Padang Bulan Selayang I, Kec. Medan Selayang, Kota Medan, Sumatera Utara 20155";
 const MAPS = "https://www.google.com/maps/search/?api=1&query=Kampus+Kuphi+Jl+Abdul+Hakim+Medan";
@@ -12,7 +13,7 @@ export const Visit = () => {
       <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-gradient-sunset opacity-25 blur-3xl rounded-full" />
 
       <div className="container relative grid lg:grid-cols-5 gap-10 items-center">
-        <div className="lg:col-span-2">
+        <Reveal variant="right" className="lg:col-span-2">
           <span className="text-xs uppercase tracking-[0.2em] text-accent font-semibold">
             Kunjungi Kami
           </span>
@@ -73,9 +74,9 @@ export const Visit = () => {
               </span>
             ))}
           </div>
-        </div>
+        </Reveal>
 
-        <div className="lg:col-span-3">
+        <Reveal variant="left" delay={150} className="lg:col-span-3">
           <div className="aspect-[4/3] md:aspect-[16/11] rounded-3xl overflow-hidden border-4 border-background/10 shadow-warm">
             <iframe
               title="Lokasi Kampus Kuphi"
@@ -85,7 +86,7 @@ export const Visit = () => {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
