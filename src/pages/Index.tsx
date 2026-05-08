@@ -9,6 +9,7 @@ import { Visit } from "@/components/kuphi/Visit";
 import { Footer } from "@/components/kuphi/Footer";
 import { WhatsAppFab } from "@/components/kuphi/WhatsAppFab";
 import { ScrollProgress } from "@/components/kuphi/ScrollProgress";
+import { HorizontalScroll } from "@/components/kuphi/HorizontalScroll";
 import { useEffect } from "react";
 
 const Index = () => {
@@ -32,9 +33,11 @@ const Index = () => {
       <Navbar />
       <Hero />
       <About />
-      <Menu />
-      <Gallery />
-      <Reviews />
+      <HorizontalScroll>
+        <div className="w-screen shrink-0"><Menu /></div>
+        <div className="w-screen shrink-0"><Gallery /></div>
+        <div className="w-screen shrink-0"><Reviews /></div>
+      </HorizontalScroll>
       <Hours />
       <Visit />
       <Footer />
