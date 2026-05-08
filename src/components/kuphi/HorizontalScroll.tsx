@@ -74,7 +74,7 @@ export const HorizontalScroll = ({ children, className }: HorizontalScrollProps)
       className={className}
       style={{ height: distance > 0 ? sectionHeight : undefined }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center pt-16 md:pt-20">
+      <div className="sticky top-0 h-screen overflow-hidden flex items-start pt-20 md:pt-24">
         <div
           ref={trackRef}
           className="flex items-stretch will-change-transform"
