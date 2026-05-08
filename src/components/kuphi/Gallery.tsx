@@ -16,7 +16,7 @@ const tiles = [
 
 export const Gallery = () => {
   return (
-    <section id="galeri" className="py-24 md:py-32 bg-background">
+    <section id="galeri" className="pt-8 md:pt-12 pb-24 md:pb-32 bg-background">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
           <div>

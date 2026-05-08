@@ -27,7 +27,7 @@ const reviews = [
 
 export const Reviews = () => {
   return (
-    <section id="ulasan" className="py-24 md:py-32 bg-muted/40 relative overflow-hidden">
+    <section id="ulasan" className="pt-8 md:pt-12 pb-24 md:pb-32 bg-muted/40 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-gradient-glow opacity-50" />
 
       <div className="container relative">
