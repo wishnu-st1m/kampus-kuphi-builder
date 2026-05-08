@@ -5,22 +5,19 @@ export const Hero = () => {
   return (
     <section
       id="top"
-      className="relative min-h-screen overflow-hidden bg-gradient-sky grain"
+      className="relative min-h-screen overflow-hidden grain"
     >
-      {/* Sun */}
-      <div className="absolute left-1/2 top-[28%] -translate-x-1/2 w-[420px] h-[420px] md:w-[560px] md:h-[560px] rounded-full bg-gradient-sunset shadow-glow animate-sun-rise" />
-      <div className="absolute left-1/2 top-[28%] -translate-x-1/2 w-[600px] h-[600px] md:w-[820px] md:h-[820px] rounded-full bg-accent/20 blur-3xl" />
-
-      {/* Paddy field silhouette */}
-      <div className="absolute bottom-0 left-0 right-0 h-[34vh] bg-gradient-to-t from-coffee-dark via-coffee to-transparent" />
-      <svg
-        className="absolute bottom-[28vh] left-0 right-0 w-full h-24 text-paddy"
-        viewBox="0 0 1440 120"
-        preserveAspectRatio="none"
-        fill="currentColor"
-      >
-        <path d="M0,80 C240,40 480,100 720,70 C960,40 1200,90 1440,60 L1440,120 L0,120 Z" />
-      </svg>
+      {/* Unsplash coffee background */}
+      <img
+        src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1920&q=80"
+        alt="Secangkir kopi hangat dengan latar hangat"
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+      />
+      {/* Warm overlays for legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/10 to-coffee-dark/80" />
+      <div className="absolute inset-0 bg-gradient-sunset opacity-20 mix-blend-overlay" />
+      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[600px] h-[600px] md:w-[820px] md:h-[820px] rounded-full bg-accent/20 blur-3xl" />
 
       <div className="relative container pt-32 md:pt-40 pb-24 md:pb-32 min-h-screen flex flex-col">
         <div className="max-w-3xl mx-auto text-center">
