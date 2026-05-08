@@ -29,7 +29,7 @@ export const Menu = () => {
       <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-sunset opacity-20 blur-3xl rounded-full" />
 
       <div className="container relative">
-        <Reveal variant="left" className="text-center max-w-2xl mx-auto">
+        <Reveal variant="up" className="text-center max-w-2xl mx-auto">
           <span className="text-xs uppercase tracking-[0.2em] text-accent font-semibold">
             Menu Andalan
           </span>
@@ -45,7 +45,7 @@ export const Menu = () => {
           {menu.map((m, i) => (
             <Reveal
               key={m.name}
-              variant="left"
+              variant="up"
               delay={i * 140}
               className="group relative p-8 rounded-3xl bg-background/5 backdrop-blur-sm border border-background/10 hover:border-accent/50 transition-colors hover:bg-background/10"
             >

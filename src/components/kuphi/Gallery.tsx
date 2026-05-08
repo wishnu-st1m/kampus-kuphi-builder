@@ -36,7 +36,7 @@ export const Gallery = () => {
           {tiles.map((t, i) => (
             <Reveal
               key={i}
-              variant="left"
+              variant={i % 2 === 0 ? "up" : "zoom"}
               delay={i * 90}
               className={`relative ${t.className} rounded-2xl overflow-hidden group cursor-pointer shadow-soft`}
             >

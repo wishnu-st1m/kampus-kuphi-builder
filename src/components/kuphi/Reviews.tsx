@@ -56,7 +56,7 @@ export const Reviews = () => {
             <Reveal
               key={i}
               as="article"
-              variant="left"
+              variant="up"
               delay={i * 150}
               className="relative p-7 rounded-3xl bg-card border border-border hover:shadow-warm transition-shadow"
             >
